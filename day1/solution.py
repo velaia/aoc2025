@@ -24,11 +24,15 @@ class Dial:
                     num_crossed += 1
         self.zeros_pointed_at += num_crossed
 
+        print(f"{direction}{amount}: {num_crossed=}, {self.zeros_pointed_at=}")
+
     
     def dial2(self, direction: str, amount: int) -> None:
         assert direction in ('L', 'R')
         amount = int(amount)
         num_crossed = 0
+        if direction == 'L' and amount == 382:
+            ...
         if direction == "L":
             self.new_position = self.position - amount
             if self.new_position <= 0:
@@ -36,6 +40,8 @@ class Dial:
                     num_crossed = 1
                 elif self.new_position >= -100 and self.position == 0:
                     num_crossed = 0
+                elif self.new_position < -100 and self.position != 0 and self.new_position % 100 ==0:
+                    num_crossed = amount // 100 + 1
                 elif self.new_position < -100 and self.position != 0:
                     num_crossed = amount // 100
                 else:
@@ -48,7 +54,7 @@ class Dial:
                 self.zeros_pointed_at += num_crossed
 
         # if self.position == 0 and self.new_position % 100 == 0:
-        print(f"{direction}{amount}: {self.position =} {self.new_position % 100=}, {num_crossed=}, {self.zeros_pointed_at=}")
+        print(f"{direction}{amount}: {num_crossed=}, {self.zeros_pointed_at=}")
         self.position = self.new_position % 100
         if self.position == 0:
             self.zeros_hit += 1
