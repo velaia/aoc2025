@@ -44,11 +44,33 @@ def calculate_split_count(path) -> int:
             result += splits
             
             new_chart.append([ch for ch in processed_row])
-
-        print(new_chart)
-
     
     return result
+
+
+def calculate_paths(path) -> int:
+    lines: list[str] = []
+
+    with Path(path).open() as file:
+        for line in file.readlines():
+            lines.append(line.strip())
+
+    width = len(lines[0])
+    values = [0] * width
+
+    for h, line in enumerate(lines):
+        s_pos = line.find("S")
+        if s_pos > 0:
+            values[s_pos] = 1
+
+        if line.find("^") != -1:
+            for i, ch in enumerate(line):
+                if ch == "^":
+                    values[i-1] += values[i]
+                    values[i+1] += values[i]
+                    values[i] = 0
+
+    return sum(values)
 
 
 if __name__ == "__main__":
@@ -66,3 +88,12 @@ if __name__ == "__main__":
     assert target_sample_result == sample_result
 
     print(f"part 1: {calculate_split_count(input)}")
+
+    # part 2 - logic from visualization under https://www.reddit.com/r/adventofcode/comments/1pgbg8a/2025_day_7_part_2_visualization_for_the_sample/
+    target_path_count = 40
+    sample_result = calculate_paths(sample)
+    assert target_path_count == sample_result
+
+    print(f"part 2: {calculate_paths(input)}")
+
+
