@@ -97,7 +97,6 @@ def calculate_clusters(path: str, max_connections: int = 10) -> int:
     return solution
 
 def calculate_last_connection(path: str) -> int:
-    solution = 0
     points: list[Node] = []
     distances: list[tuple[float, tuple]] = []
 
@@ -122,7 +121,7 @@ def calculate_last_connection(path: str) -> int:
         connections_made += 1
         if not is_already_connected(connection[1], circuits):
             update_circuits(connection[1], circuits)
-        print(connection)
+
         if counter > 5 and len(circuits) == 1 and len(circuits[0]) == len(points):
             break
     
