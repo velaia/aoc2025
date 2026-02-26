@@ -1,0 +1,11 @@
+[workspace]
+authors = ["Daniel N. Lang <daniel.lang@velaia.de>"]
+channels = ["https://conda.modular.com/max-nightly", "conda-forge"]
+name = "mojo-solution"
+platforms = ["osx-arm64"]
+version = "0.1.0"
+
+[tasks]
+
+[dependencies]
+mojo = ">=0.26.1.0.dev2025121217,<0.27"

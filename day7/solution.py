@@ -10,7 +10,7 @@ def process_row(row1: str, row2: str):
     ......|.|......
 
     only split at ^ and if there's a | above
-    
+
     """
     processed_row: list[str] = ["."] * len(row1)
     num_splits = 0
@@ -20,8 +20,8 @@ def process_row(row1: str, row2: str):
             processed_row[i] = "|"
         elif char in ["|", "S"] and row2[i] == "^":
             num_splits += 1
-            processed_row[i-1] = "|"
-            processed_row[i+1] = "|"
+            processed_row[i - 1] = "|"
+            processed_row[i + 1] = "|"
             processed_row[i] = "^"
 
     processed_row = "".join(processed_row)
@@ -29,48 +29,38 @@ def process_row(row1: str, row2: str):
 
 
 def calculate_split_count(path) -> int:
-    file = Path(path)
     result = 0
 
-    chart = []
-    new_chart = []
-    with file.open() as input_file:
-        for line in input_file.readlines():
-            chart.append(line.strip())
-        
+    with Path(path).open() as input_file:
+        chart = [line.strip() for line in input_file]
+
         processed_row = chart[0]
         for row in range(1, len(chart)):
             processed_row, splits = process_row(processed_row, chart[row])
             result += splits
-            
-            new_chart.append([ch for ch in processed_row])
-    
+
     return result
 
 
 def calculate_paths(path) -> int:
-    lines: list[str] = []
-
     with Path(path).open() as file:
-        for line in file.readlines():
-            lines.append(line.strip())
+        lines = [line.strip() for line in file]
+        width = len(lines[0])
+        values = [0] * width
 
-    width = len(lines[0])
-    values = [0] * width
+        for line in lines:
+            s_pos = line.find("S")
+            if s_pos > 0:
+                values[s_pos] = 1
 
-    for h, line in enumerate(lines):
-        s_pos = line.find("S")
-        if s_pos > 0:
-            values[s_pos] = 1
+            if line.find("^") != -1:
+                for i, ch in enumerate(line):
+                    if ch == "^":
+                        values[i - 1] += values[i]
+                        values[i + 1] += values[i]
+                        values[i] = 0
 
-        if line.find("^") != -1:
-            for i, ch in enumerate(line):
-                if ch == "^":
-                    values[i-1] += values[i]
-                    values[i+1] += values[i]
-                    values[i] = 0
-
-    return sum(values)
+        return sum(values)
 
 
 if __name__ == "__main__":
@@ -95,5 +85,3 @@ if __name__ == "__main__":
     assert target_path_count == sample_result
 
     print(f"part 2: {calculate_paths(input)}")
-
-
